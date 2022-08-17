@@ -12,7 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../util/RootStack';
 import { RouteProp } from '@react-navigation/native';
 //@ts-ignore
-import {API_URL, GITHUB_API_KEY} from '@env';
+import {API_URL, GITHUB_ACCESS_KEY} from '@env';
 
 interface Items {
   index: number,
@@ -55,7 +55,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
   const onInput = async (text: string) => {
 
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "token " + GITHUB_API_KEY);
+    myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
 
     var requestOptions = {
       method: 'GET',
@@ -81,7 +81,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
 
   let requestApi = async () => {
     var myHeaders = new Headers();
-      myHeaders.append("Authorization", "token " + GITHUB_API_KEY);
+      myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
   
       var requestOptions = {
         method: 'GET',

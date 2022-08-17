@@ -13,7 +13,7 @@ import { RootStackParamList } from '../../util/RootStack';
 import dayjs from 'dayjs';
 import { RouteProp } from '@react-navigation/native';
 //@ts-ignore
-import {API_URL, GITHUB_API_KEY} from '@env';
+import {API_URL, GITHUB_ACCESS_KEY} from '@env';
 
 interface Items {
     index: number,
@@ -83,7 +83,7 @@ export const SecondScreen: React.FC<Props<'User'>> = ({ route }) => {
 
     let request = async () => {
         let myHeaders = new Headers();
-        myHeaders.append("Authorization", "token " + GITHUB_API_KEY);
+        myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
 
         let requestOptions = {
             method: 'GET',
