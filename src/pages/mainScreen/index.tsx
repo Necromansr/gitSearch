@@ -11,8 +11,7 @@ import { Item } from '../../components/Item';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../util/RootStack';
 import { RouteProp } from '@react-navigation/native';
-//@ts-ignore
-import {API_URL, GITHUB_ACCESS_KEY} from '@env';
+import {requestData} from '../../util/api'
 
 interface Items {
   index: number,
@@ -54,23 +53,14 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
 
   const onInput = async (text: string) => {
 
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
+   
     
-    let data = await fetch(`${API_URL}/search/users?q=${text}&per_page=15&page=1`, requestOptions);
-    let result = await data.json();
+    
+    let result = await requestData(`/search/users?q=${text}&per_page=15&page=1`);
     
     if (result?.items) {
       let arr = result.items.map(async (x: any) => {
-
-        let data = await fetch(`${API_URL}/users/${x.login}`, requestOptions);
-        return await data.json();
+        return await requestData(`/users/${x.login}`);
       });
 
       setItems(await Promise.all(arr));
@@ -79,24 +69,15 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
   };
 
 
-  let requestApi = async () => {
-    var myHeaders = new Headers();
-      myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
+  let requestNextPage = async () => {
   
-      var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-      };
-  
-      let data = await fetch(`${API_URL}/search/users?q=${search}&per_page=15&page=${page}`, requestOptions);
-      let result = await data.json();
+      let result = await requestData(`/search/users?q=${search}&per_page=15&page=${page}`); 
   
       if (result?.items) {
         let arr = result.items.map(async (x: any) => {
-          let data = await fetch( `${API_URL}/users/${x.login}`, requestOptions);
-          return await data.json();
+            return await requestData(`/users/${x.login}`);
         });
+        
         let temp = [...items, ...(await Promise.all(arr))];
 
         setItems(temp);
@@ -106,7 +87,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
 
   useEffect(() => {
       if(page !== 1) {
-        requestApi();
+        requestNextPage();
       }
   }, [page])
 

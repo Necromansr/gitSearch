@@ -12,8 +12,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../util/RootStack';
 import dayjs from 'dayjs';
 import { RouteProp } from '@react-navigation/native';
-//@ts-ignore
-import {API_URL, GITHUB_ACCESS_KEY} from '@env';
+import {requestData} from '../../util/api'
+
 
 interface Items {
     index: number,
@@ -82,17 +82,7 @@ export const SecondScreen: React.FC<Props<'User'>> = ({ route }) => {
     let [search, setSearch] = useState('');
 
     let request = async () => {
-        let myHeaders = new Headers();
-        myHeaders.append("Authorization", "token " + GITHUB_ACCESS_KEY);
-
-        let requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow'
-        };
-        let data = await fetch(`${API_URL}/users/${user.login}/repos`, requestOptions);
-        let result = await data.json();
-        
+        let result = await requestData(`/users/${user.login}/repos`)
         setItems(result);
     }
 
