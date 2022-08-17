@@ -1,31 +1,19 @@
 import React, { useEffect, useState } from "react";
 import {
     Text,
-    View,
     StyleSheet,
-    ScrollView,
-    TextInput,
     Image,
-    Dimensions,
-    NativeSyntheticEvent,
-    NativeScrollEvent,
-    TextInputChangeEventData,
     TouchableOpacity
 } from "react-native";
 
-interface ItemProps {
-    user: {
-        id: number,
-        avatar_url: string,
-        login: string,
-        public_repos: number,
-        forks: number,
-        stars: number
-    },
+import { Users } from '../util/interface'
+
+interface Item {
+    user: Users,
     onClick?: Function
 }
 
-export const Item = (props: ItemProps) => (
+export const Item = (props: Item) => (
     <TouchableOpacity key={props.user?.id} style={styles.container} onPress={(event) => props.onClick?.(event)}>
         <Image
             style={styles.img}

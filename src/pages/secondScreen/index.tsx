@@ -13,13 +13,7 @@ import { RootStackParamList } from '../../util/RootStack';
 import dayjs from 'dayjs';
 import { RouteProp } from '@react-navigation/native';
 import {requestData} from '../../util/api'
-
-
-interface Items {
-    index: number,
-    style: object
-}
-
+import { Users, Repos } from '../../util/interface'
 
 type ScreenNavigationProp<
     T extends keyof RootStackParamList
@@ -37,27 +31,10 @@ type Props<T extends keyof RootStackParamList> = {
 
 
 
-interface User {
-    avatar_url: string
-    login: string,
-    email: string,
-    location: string,
-    created_at: string,
-    followers: number,
-    following: number,
-}
+
 
 interface Repositories {
-    item: {
-        id: number,
-        owner: {
-            avatar_url: string
-        },
-        name: string,
-        forks_count: number
-        stargazers_count: number,
-    },
-
+    item: Repos,
 }
 
 const Item = (props: Repositories) => (
@@ -76,9 +53,9 @@ const Item = (props: Repositories) => (
 
 
 export const SecondScreen: React.FC<Props<'User'>> = ({ route }) => {
-    const user: User = route?.params!;
+    const user: Users = route?.params!;
     
-    let [items, setItems] = useState<any[]>([]);
+    let [items, setItems] = useState<Repos[]>([]);
     let [search, setSearch] = useState('');
 
     let request = async () => {
@@ -94,7 +71,7 @@ export const SecondScreen: React.FC<Props<'User'>> = ({ route }) => {
         setSearch(text);
     };
 
-    const renderItem = ({ item }: any) => (
+    const renderItem = ({ item }: Repositories) => (
         <Item item={item} />
     );
 
@@ -118,7 +95,7 @@ export const SecondScreen: React.FC<Props<'User'>> = ({ route }) => {
                 style={styles.listRepositories}
                 data={items.filter(x => x.name.toLowerCase().includes(search.toLowerCase()))}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
             />
         </View>
     );

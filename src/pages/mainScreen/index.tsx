@@ -12,23 +12,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../util/RootStack';
 import { RouteProp } from '@react-navigation/native';
 import {requestData} from '../../util/api'
+import { Users } from '../../util/interface'
 
-interface Items {
-  index: number,
-  style: object
-}
-
-interface ItemProps {
-  user: {
-      id: number,
-      avatar_url: string,
-      login: string,
-      public_repos: number,
-      forks: number,
-      stars: number
-  },
-  onClick?: Function
-}
 
 type ScreenNavigationProp<
   T extends keyof RootStackParamList
@@ -38,24 +23,26 @@ type ScreenRouteProp<T extends keyof RootStackParamList> = RouteProp<
   RootStackParamList,
   T
 >;
+
 type Props<T extends keyof RootStackParamList> = {
   route: ScreenRouteProp<T>;
   navigation: ScreenNavigationProp<T>;
 };
 
+interface PropsItem {
+  item: Users
+}
+
 
 export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
 
-  let [items, setItems] = useState<any[]>([]);
+  let [items, setItems] = useState<Users[]>([]);
   let [search, setSearch] = useState<string>('');
   let [page, setPage] = useState<number>(1);
   let [fetching, setFetching] = useState<boolean>(true);
 
   const onInput = async (text: string) => {
 
-   
-    
-    
     let result = await requestData(`/search/users?q=${text}&per_page=15&page=1`);
     
     if (result?.items) {
@@ -77,7 +64,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
         let arr = result.items.map(async (x: any) => {
             return await requestData(`/users/${x.login}`);
         });
-        
+
         let temp = [...items, ...(await Promise.all(arr))];
 
         setItems(temp);
@@ -96,7 +83,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
       setPage(page + 1)
   }
 
-  const renderItem = ({ item }: any) => (
+  const renderItem = ({ item } : PropsItem) => (
     <Item key={item.id} user={item} onClick={() => navigation.push('User', item)} />
   );
 
@@ -108,7 +95,7 @@ export const FirstScreen: React.FC<Props<'Home'>> = ({ navigation }) => {
         style={styles.listUsers}
         data={items}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         onEndReachedThreshold={0.2}
         onEndReached={loadMore}
       />

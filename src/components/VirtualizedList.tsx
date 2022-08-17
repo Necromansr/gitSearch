@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
-    Text,
     View,
-    StyleSheet,
     ScrollView,
-    TextInput,
-    Image,
-    Dimensions,
     NativeSyntheticEvent,
     NativeScrollEvent,
-    TextInputChangeEventData
 } from "react-native";
 
 
